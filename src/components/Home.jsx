@@ -1,18 +1,26 @@
-import React from "react";
-import { useLoaderData } from "react-router";
+import React, { useState } from "react";
+import { Link, useLoaderData } from "react-router";
 import CoffeeCard from "./CoffeeCard";
+import { BsListNested } from "react-icons/bs";
 
 const Home = () => {
-  const coffees = useLoaderData();
-  console.log(coffees);
+  const initialCoffees = useLoaderData();
+  const [coffees, setCoffees] = useState(initialCoffees);
 
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {coffees.map((coffee) => (
-          <CoffeeCard key={coffee._id} coffee={coffee}></CoffeeCard>
+          <CoffeeCard
+            key={coffee._id}
+            coffees={coffees}
+            setCoffees={setCoffees}
+            coffee={coffee}></CoffeeCard>
         ))}
       </div>
+      <Link to="/addCoffee">
+        <button className="btn btn-primary mt-10">Add Coffee</button>
+      </Link>
     </div>
   );
 };

@@ -1,9 +1,34 @@
 import React from "react";
+import Swal from "sweetalert2";
 
 const AddCoffee = () => {
   const handleAddCoffee = (e) => {
     e.preventDefault();
     const form = e.target;
+    const formData = new FormData(form);
+    const newCoffee = Object.fromEntries(formData.entries());
+
+    // sent coffee data to the db
+    fetch("http://localhost:3000/coffees", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(newCoffee),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.insertedId) {
+          console.log("added successfully.");
+          Swal.fire({
+            title: "Coffee Added Successfully.",
+            icon: "success",
+            draggable: true,
+          });
+          form.reset();
+        }
+        console.log("after adding coffee to db", data);
+      });
   };
 
   return (
@@ -29,12 +54,12 @@ const AddCoffee = () => {
             />
           </fieldset>
           <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4">
-            <label className="label">Chef</label>
+            <label className="label">Quantity</label>
             <input
               type="text"
-              name="chef"
+              name="quantity"
               className="input w-full"
-              placeholder="Chef Name"
+              placeholder="Quantity Name"
             />
           </fieldset>
           <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4">
@@ -56,12 +81,12 @@ const AddCoffee = () => {
             />
           </fieldset>
           <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4">
-            <label className="label">Category</label>
+            <label className="label">Price</label>
             <input
               type="text"
-              name="category"
+              name="price"
               className="input w-full"
-              placeholder="Category Name"
+              placeholder="Price Per Cup"
             />
           </fieldset>
           <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4">

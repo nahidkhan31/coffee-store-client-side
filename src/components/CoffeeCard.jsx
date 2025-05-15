@@ -2,6 +2,7 @@ import React from "react";
 import { CiEdit } from "react-icons/ci";
 import { GrView } from "react-icons/gr";
 import { MdDeleteForever } from "react-icons/md";
+import { Link } from "react-router";
 import Swal from "sweetalert2";
 
 const CoffeeCard = ({ coffee }) => {
@@ -19,11 +20,20 @@ const CoffeeCard = ({ coffee }) => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Swal.fire({
-        //   title: "Deleted!",
-        //   text: "Your file has been deleted.",
-        //   icon: "success"
-        // });
+        // start deleting the coffee
+        fetch(`http://localhost:3000/coffees/${_id}`, {
+          method: "DELETE",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.deletedCount) {
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your coffee has been deleted.",
+                icon: "success",
+              });
+            }
+          });
       }
     });
   };
@@ -41,12 +51,18 @@ const CoffeeCard = ({ coffee }) => {
           </div>
           <div className="card-actions justify-end">
             <div className="join join-vertical space-y-1">
-              <button className="btn join-item">
-                <GrView />
-              </button>
-              <button className="btn join-item">
-                <CiEdit />
-              </button>
+              <Link to={`/coffeeDetails/${_id}`}>
+                <button className="btn join-item">
+                  <GrView />
+                </button>
+              </Link>
+
+              <Link to={`/updateCoffee/${_id}`}>
+                <button className="btn join-item">
+                  <CiEdit />
+                </button>
+              </Link>
+
               <button
                 onClick={() => handleDelete(_id)}
                 className="btn join-item">
